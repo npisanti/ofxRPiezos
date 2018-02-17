@@ -9,13 +9,15 @@ void ofxRPiezosServer::setup( string xmlSettingsPath ){
     settings.loadFile( xmlSettingsPath );
     string ip = settings.getValue("settings:client_ip", "localhost");
     int port = settings.getValue("settings:port", 4444);   
+    string name = settings.getValue("settings:name", "piezos");   
     
-    setup( ip, port );
+    setup( ip, port, name );
 }
 
-void ofxRPiezosServer::setup( string clientIP, int port ){
+void ofxRPiezosServer::setup( string clientIP, int port, string name ){
 
     gui.setup("", "settings.xml", 20, 20);
+    gui.setName( name );
     gui.add( bCalibrate.set("calibrate piezos", false ) );
     
     piezos.resize( OFXRPIEZOS_NUM_SENSORS );
@@ -33,7 +35,7 @@ void ofxRPiezosServer::setup( string clientIP, int port ){
     a2d.setup("/dev/spidev0.0", SPI_MODE_0, 1000000, 8);
     
     for( int i=0; i<(int)piezos.size(); ++i ){
-        piezos[i].setup( i, a2d, sender, calib );
+        piezos[i].setup( i, a2d, sender, calib, name );
     }
     
     sync.setup((ofParameterGroup&)gui.getParameter(), OFXRPIEZOS_SYNC_PORT_SERVER, clientIP, OFXRPIEZOS_SYNC_PORT_CLIENT );

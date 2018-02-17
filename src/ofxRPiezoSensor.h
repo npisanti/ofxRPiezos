@@ -12,7 +12,7 @@ class ofxRPiezoSensor : public ofxRPiezoParams {
 public:
     ofxRPiezoSensor();
     
-    void setup ( int channel, MCP & mcp, ofxOscSender & sender, ofxOscSender & calib );
+    void setup ( int channel, MCP & mcp, ofxOscSender & sender, ofxOscSender & calib, string name="piezos" );
     void update( bool bCalibrate );
 
 private:
@@ -28,6 +28,10 @@ private:
     
     float xn;
     float yn;
+    
+    string rawAddress;
+    string envAddress;
+    string trigAddress;
 
 };
 

@@ -9,11 +9,17 @@ ofxRPiezoSensor::ofxRPiezoSensor() {
     rising = true;
 }
 
-void ofxRPiezoSensor::setup ( int channel, MCP & mcp, ofxOscSender & sender, ofxOscSender & calib ) {
+void ofxRPiezoSensor::setup ( int channel, MCP & mcp, ofxOscSender & sender, ofxOscSender & calib, string name ) {
     this->channel = channel;
     this->a2d = &mcp;
     this->sender = &sender;
     this->calib = &calib;
+    envAddress.resize(2);
+    trigAddress.resize(2);
+    
+    rawAddress = "/" + name + "/raw";
+    envAddress = "/" + name + "/envelope";
+    trigAddress = "/" + name + "/trigger";
 }
 
 void ofxRPiezoSensor::update( bool bCalibrate ) {
@@ -28,12 +34,12 @@ void ofxRPiezoSensor::update( bool bCalibrate ) {
         value = (data[1]<< 8) & 0b1100000000;
         value |=  (data[2] & 0xff);     
         // now 'value' holds the ADC in value
-        
+
         if(value!=oldValue){
             
             if(bCalibrate){
                 ofxOscMessage m;
-                m.setAddress("/piezos/raw" );
+                m.setAddress( rawAddress );
                 m.addIntArg( channel );
                 m.addIntArg( value );
                 calib->sendMessage(m, false);
@@ -46,7 +52,7 @@ void ofxRPiezoSensor::update( bool bCalibrate ) {
                 float dyn = ofMap( value, gateLo, gateHi, 0.0f, 1.0f, true );
                 ofxOscMessage m;
                 m.addIntArg( channel );
-                m.setAddress("/piezos/trigger" );
+                m.setAddress( trigAddress );
                 m.addFloatArg( dyn );
                 if(bCalibrate){ 
                     calib->sendMessage(m, false ); 
@@ -75,7 +81,7 @@ void ofxRPiezoSensor::update( bool bCalibrate ) {
             
             if( abs( yn_m1 - yn ) > granularity ){
                 ofxOscMessage m;
-                m.setAddress("/piezos/envelope" );
+                m.setAddress( envAddress );
                 m.addIntArg( channel );
                 m.addFloatArg( yn );
                 if(bCalibrate){ 
@@ -89,7 +95,7 @@ void ofxRPiezoSensor::update( bool bCalibrate ) {
                 yn = 0.0f;
 
                 ofxOscMessage m;
-                m.setAddress("/piezos/envelope" );
+                m.setAddress( envAddress );
                 m.addIntArg( channel );
                 m.addFloatArg( yn );
                 if(bCalibrate){ 

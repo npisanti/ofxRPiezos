@@ -5,12 +5,19 @@ void ofxRPiezosPanel::setupFromFile( string xmlSettingsPath ) {
     ofxXmlSettings settings;
     settings.loadFile( xmlSettingsPath );
     string ip = settings.getValue("settings:server_ip", "localhost");
-    setup( ip);
+    string name = settings.getValue("settings:name", "piezos");
+    setup( ip, name );
 }
 
-void ofxRPiezosPanel::setup( string serverIP ){
-    
-    gui.setup("", "piezos.xml", 20, 20);
+void ofxRPiezosPanel::setup( string serverIP, string name ){
+
+    rawAddress = "/" + name + "/raw";
+    envAddress = "/" + name + "/envelope";
+    trigAddress = "/" + name + "/trigger";
+
+	string filename = name + ".xml";
+    gui.setup("", filename, 20, 20);
+    gui.setName( name );
     gui.add( bCalibrate.set("calibrate piezos", false ) );
     
     piezos.resize( OFXRPIEZOS_NUM_SENSORS );
@@ -67,14 +74,14 @@ void ofxRPiezosPanel::update(){
 		ofxOscMessage m;
 		receiver.getNextMessage(m);
         
-        if ( m.getAddress() == "/piezos/raw" ){
+        if ( m.getAddress() == rawAddress ){
             int channel = m.getArgAsInt32(0);
             datas[channel].raw = m.getArgAsInt32(1);
-        } else if (m.getAddress() == "/piezos/trigger" ){
+        } else if (m.getAddress() == trigAddress ){
             int channel = m.getArgAsInt32(0);
             datas[channel].trigger = m.getArgAsFloat(1);
             datas[channel].triggerCounter = 8;
-        } else if (m.getAddress() == "/piezos/envelope" ){
+        } else if (m.getAddress() == envAddress ){
             int channel = m.getArgAsInt32(0);
             datas[channel].envelope = m.getArgAsFloat(1);
         }

@@ -36,7 +36,7 @@ public:
     };
 
     void setupFromFile( string xmlSettingsPath );
-    void setup( string serverIP );
+    void setup( string serverIP, string name="piezos" );
     void update( );
     void draw();
     
@@ -62,5 +62,8 @@ private:
     
     // graphic variables:
     vector<PiezoGraphicsData> datas;
-    
+        
+    string rawAddress;
+    string envAddress;
+    string trigAddress;
 };

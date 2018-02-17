@@ -16,7 +16,7 @@ class ofxRPiezosServer {
 
 public:
     void setup( string xmlSettingsPath );
-    void setup( string clientIP, int port);
+    void setup( string clientIP, int port, string name="piezos");
     void update();
     void exit();
     
