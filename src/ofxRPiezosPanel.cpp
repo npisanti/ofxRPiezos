@@ -6,10 +6,11 @@ void ofxRPiezosPanel::setupFromFile( string xmlSettingsPath ) {
     settings.loadFile( xmlSettingsPath );
     string ip = settings.getValue("settings:server_ip", "localhost");
     string name = settings.getValue("settings:name", "piezos");
-    setup( ip, name );
+    int plot = settings.getValue("settings:max_plot", 127);
+    setup( ip, name, plot );
 }
 
-void ofxRPiezosPanel::setup( string serverIP, string name ){
+void ofxRPiezosPanel::setup( string serverIP, string name, int maxplot ){
 
     rawAddress = "/" + name + "/raw";
     envAddress = "/" + name + "/envelope";
@@ -55,9 +56,11 @@ void ofxRPiezosPanel::setup( string serverIP, string name ){
         datas[i].envPlotIndex = 0;
     }
     
-    settings.height = 120;
-    settings.width = 250;
+    settings.height = 140;
+    settings.width = 220;
     settings.separator = 10;
+    settings.envseparator = 40;
+    settings.plotmax = maxplot;
     
     fbo.allocate( settings.width*4 + settings.separator*5 +2, settings.height*4 + settings.separator*3 + 2 );
 }
@@ -112,8 +115,8 @@ void ofxRPiezosPanel::update(){
             }
 
             if( piezos[i].bTrigger && piezos[i].bActive){
-                int miny =ofMap( piezos[i].gateLo, 0, 1023, settings.height, 0 );
-                int maxy =ofMap( piezos[i].gateHi, 0, 1023, settings.height, 0 );
+                int miny =ofMap( piezos[i].gateLo, 0, settings.plotmax, settings.height, 0, true );
+                int maxy =ofMap( piezos[i].gateHi, 0, settings.plotmax, settings.height, 0, true );
                         
                 if( datas[i].triggerCounter > 0){
                     ofSetColor( datas[i].trigger*120 + 100 );
@@ -137,22 +140,26 @@ void ofxRPiezosPanel::update(){
                 int index = datas[i].rawPlotIndex + k;
                 if( index >= max ) index -= max;
                 ofVertex(   ofMap( k, max, 0, 0, settings.width ), 
-                            ofMap( datas[i].rawPlot[index], 0, 1023, settings.height, 0, true ) );
+                            ofMap( datas[i].rawPlot[index], 0, settings.plotmax, settings.height, 0, true ) );
             }
             ofEndShape();
             
             if(piezos[i].bEnvelope ){
-                float ex = settings.width + settings.separator;
-                float ey = ofMap( piezos[i].envHi, 0, 1023, settings.height, 0 );
-                float eh = ofMap( piezos[i].envHi - piezos[i].envLo, 0, 1023, 0, settings.height );
+                float ex = settings.width + settings.envseparator;
+                float ey = ofMap( piezos[i].envHi, 0, settings.plotmax, settings.height, 0, true );
+                float eh = ofMap( piezos[i].envHi - piezos[i].envLo, 0, settings.plotmax, 0, settings.height, true );
+                float emin = ey+eh;
                 
-                ofDrawRectangle( ex, ey, settings.width, eh );
+                ofDrawLine( settings.width, ey,   ex, 0);
+                ofDrawLine( settings.width, emin, ex, settings.height);
+                
+                ofDrawRectangle( ex, 0, settings.width, settings.height );
                 ofBeginShape();
                 for( size_t k=0; k<max; ++k ){
                     int index = datas[i].envPlotIndex + k;
                     if( index >= max ) index -= max;
                     ofVertex(   ex + ofMap( k, max, 0, 0, settings.width ), 
-                                ey + ofMap( datas[i].envPlot[index], 0, 1.0f, eh, 0, true ) );
+                                ofMap( datas[i].envPlot[index], 0, 1.0f, settings.height, 0, true ) );
                 }
                 ofEndShape();
             }
@@ -160,9 +167,9 @@ void ofxRPiezosPanel::update(){
 
             ofDrawBitmapString( "piezo "+ofToString(i), 5, 15 );
             
-            ofTranslate( 0, settings.height+settings.separator);
+            ofTranslate( 0, settings.height+settings.separator );
             if( i%4==3 ){
-                ofTranslate( settings.width*2 + settings.separator*3, -4*(settings.height+settings.separator));
+                ofTranslate( settings.width*2 + settings.separator*2 + settings.envseparator, -4*(settings.height+settings.separator));
             }
             
         }

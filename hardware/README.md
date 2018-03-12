@@ -1,6 +1,6 @@
 
 WARNING!!!! THIS IS A WORK IN PROGRESS!!!! READ THIS FIRST:
-at the moment the following schematics are wrong, the piezos output in a range that is more than 3.3v (the vref for the mcp3008 in this configuration). At the moment i will try putting voltage dividers for scaling down each of the piezo voltage to keep it in range (with 3.3k & 1.8k resistors), then i will update this README.md
+at the moment the following schematics are wrong, the piezos output in a range that is more than 3.3v (the vref for the mcp3008 in this configuration). At the moment I am testing with voltage dividers after each input for scaling down each of the piezo voltage to keep it in range (with 1.8k ohm & 560 ohm resistors) and it is working fine, i will update this README.md as soon as possible.
 
 
 These are some notes on the used harware:

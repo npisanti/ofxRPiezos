@@ -33,10 +33,12 @@ public:
         int width;
         int height;
         int separator;
+        int envseparator;
+        int plotmax;
     };
 
     void setupFromFile( string xmlSettingsPath );
-    void setup( string serverIP, string name="piezos" );
+    void setup( string serverIP, string name="piezos", int maxplot=127 );
     void update( );
     void draw();
     
