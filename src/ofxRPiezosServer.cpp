@@ -70,7 +70,7 @@ void ofxRPiezosServer::update(){
 }
 
 void ofxRPiezosServer::exit(){
-    a2d.xclose();
+    a2d.quit();
 }
 
 void ofxRPiezosServer::saveCallback( bool & value ){
