@@ -56,13 +56,13 @@ void ofxRPiezosPanel::setup( string serverIP, string name, int maxplot ){
         datas[i].envPlotIndex = 0;
     }
     
-    settings.height = 140;
+    settings.height = 160;
     settings.width = 220;
     settings.separator = 10;
     settings.envseparator = 40;
     settings.plotmax = maxplot;
     
-    fbo.allocate( settings.width*4 + settings.separator*5 +2, settings.height*4 + settings.separator*3 + 2 );
+    fbo.allocate( settings.width*4 + settings.separator*3 +2+ settings.envseparator*2 +2, settings.height*4 + settings.separator*3 + 2 );
 }
 
 
@@ -119,7 +119,7 @@ void ofxRPiezosPanel::update(){
                 int maxy =ofMap( piezos[i].gateHi, 0, settings.plotmax, settings.height, 0, true );
                         
                 if( datas[i].triggerCounter > 0){
-                    ofSetColor( datas[i].trigger*120 + 100 );
+                    ofSetColor( datas[i].trigger*100 + 155 );
                     ofFill();
                     ofDrawRectangle( 0, maxy, settings.width, miny-maxy );
                     ofNoFill();
@@ -136,7 +136,7 @@ void ofxRPiezosPanel::update(){
             
             ofBeginShape();
             int max = datas[i].rawPlot.size();
-            for( size_t k=0; k<max; ++k ){
+            for( int k=0; k<max; ++k ){
                 int index = datas[i].rawPlotIndex + k;
                 if( index >= max ) index -= max;
                 ofVertex(   ofMap( k, max, 0, 0, settings.width ), 
@@ -155,7 +155,7 @@ void ofxRPiezosPanel::update(){
                 
                 ofDrawRectangle( ex, 0, settings.width, settings.height );
                 ofBeginShape();
-                for( size_t k=0; k<max; ++k ){
+                for( int k=0; k<max; ++k ){
                     int index = datas[i].envPlotIndex + k;
                     if( index >= max ) index -= max;
                     ofVertex(   ex + ofMap( k, max, 0, 0, settings.width ), 
@@ -168,8 +168,8 @@ void ofxRPiezosPanel::update(){
             ofDrawBitmapString( "piezo "+ofToString(i), 5, 15 );
             
             ofTranslate( 0, settings.height+settings.separator );
-            if( i%4==3 ){
-                ofTranslate( settings.width*2 + settings.separator*2 + settings.envseparator, -4*(settings.height+settings.separator));
+            if( i%3==2 ){
+                ofTranslate( settings.width*2 + settings.separator*2 + settings.envseparator, -3*(settings.height+settings.separator));
             }
             
         }
