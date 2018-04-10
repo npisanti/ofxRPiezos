@@ -24,6 +24,16 @@ void ofApp::draw(){
 }
 
 //--------------------------------------------------------------
+void ofApp::exit(){
+    if( panel.bCalibrate ){
+        ofLogNotice()<<"calibration utility: deactivating calibration mode before quitting";
+        panel.bCalibrate = false;
+        panel.update();
+        ofSleepMillis(50);
+    }
+}
+
+//--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
 }
