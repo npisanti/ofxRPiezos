@@ -13,4 +13,4 @@ perfboard prototype:
 ![alt tag](https://github.com/npisanti/ofxRPiezos/blob/master/prototype.jpg)   
    
 calibration utility:   
-![alt tag](https://github.com/npisanti/ofxRPiezos/blob/master/calibrate_utility.jpg)   
+![alt tag](https://github.com/npisanti/ofxRPiezos/blob/master/calibrate_utility.png)   

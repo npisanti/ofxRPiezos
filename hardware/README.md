@@ -1,11 +1,7 @@
 
-WARNING!!!! THIS IS A WORK IN PROGRESS!!!! READ THIS FIRST:
-at the moment the following schematics are wrong, the piezos output in a range that is more than 3.3v (the vref for the mcp3008 in this configuration). At the moment I am testing with voltage dividers after each input for scaling down each of the piezo voltage to keep it in range (with 1.8k ohm & 560 ohm resistors) and it is working fine, i will update this README.md as soon as possible.
-
-
 These are some notes on the used harware:
    
-This is a breadboard prototype of the needed shield (you need 5.1 zener diodes, 1Mohm resistors and an MCP3008 DAC) :   
+This is a breadboard prototype for one of the sensor input (you need 5.1 zener diodes, 1M, 1.8k and 560 ohm resistors and an MCP3008 DAC), basically the 5v piezo input has to go into a voltage divider before going into the MCP3008 input, as the MP3008 runs at 3.3v:   
 ![alt tag](https://github.com/npisanti/ofxRPiezos/blob/master/hardware/breadboard.jpg)
    
 The rPi 40pin GPIO has to be connected to the MCP3008 making these connections:   
